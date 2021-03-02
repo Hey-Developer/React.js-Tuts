@@ -1,0 +1,18 @@
+So we clear all the files from our directory which we got by default from create-react-app.
+-> But we kept only few files like:
+ > public--index.html (which is a base file)
+ > src--index.js
+ > package.json file 
+
+Now let us re create our index.js file clear all the content of index.js file.
+
+> FOr any react app we need two dependencies which is must these are->
+-- React and React DOM
+-- So we will start from importing them.
+-- and then use a render  method to display our elements or components to the html page.
+
+Now there are two choice.
+~ Either u can make a component and then render that component on html page,
+~ OR u can directly write a simple tag in the first parameter of render method. (Using JSX or React.createElement())
+
+

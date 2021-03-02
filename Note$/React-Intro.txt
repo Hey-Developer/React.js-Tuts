@@ -1,0 +1,35 @@
+# First React APP:
+
+$ 1.) React Directly in HTML or Making a react app using CDN Links:
+    > Start by including three scripts, the first two let us write React code in our JavaScripts, and the third, Babel, allows us to write JSX syntax and ES6 in older browsers.
+    > JSX is JS Extension that allow u to write HTML code in JS file.
+    <!DOCTYPE html>
+    <html>
+      <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+      <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+      <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+      <body>
+
+        <div id="mydiv"></div> // location where we insert our code from react file.
+
+        <script type="text/babel">
+          //React method to move the html code to the location @html file.
+          ReactDOM.render(<h1>Hello</h1>, document.getElementById('mydiv'))
+        </script>
+      </body>
+    </html>
+
+> The two dependencies which we add in the form  of CDN is must for any React app without it is not possible to write react code, from the dependencies we have a pre-defined methods named render(), this allow us act as transport which transfer our JSX code @the html file location which we specified.
+-- ReactDOM.render(WHAT DO I WANT TO RENDER, WHERE DO I WANT TO RENDER IT);
+
+# This way of using React can be OK for testing purposes, but for production you will need to set up a React environment.
+
+$ 2.) Setting up React Environment-->
+    > If you have NPM and Node.js installed, you can create a React application by first installing the create-react-app.
+    > Install create-react-app by running this command in your terminal:
+      npm install -g create-react-app
+    > Run this command to create a React application named myfirstreact:
+      npx create-react-app myfirstreact
+    > Now you are ready to run your first real React application!
+      cd myfirstreact
+      npm start
