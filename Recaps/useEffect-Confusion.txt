@@ -1,0 +1,92 @@
+$ Normally when we see our component in the browsers or in the DOM before that or after update that component or when the component is remove from the dom, there are certain methods calls in each phase.
+
+Three phase of component:
+# Component Mounting Phase
+# Component Updating Phase
+# Component Un-Mounting Phase
+
+note: all this methods will only available in class based components. i.e in functional based components these methods do not call or available to override.
+
+The method calls in each phase are as follows:
+
+? Component Mounting Phase-->
+  -> constructor() 
+     //It is not mandatory if u not override it it will not call ..
+  -> static getDerivedStateFromProps(props, state)
+     //It is also optional method not mandatory, If u don't override this , the method will not called..
+  -> render() 
+     // these method is must to override inside we write all the components structures which we want to render to the dom before the component mount to the actual dom this method render the component in the virtual dom.
+  -> componentDidMount() 
+     // The Last method: componentDidMount() is called at last when your component is mount in the actual dom from the virtual dom, i.e ur component is visible in the HTML DOM..
+     // also optional if you don't override it it will not call ..
+     // u write all those works which required to run after the component is properly mount in the dom..
+
+? Component Updating Phase -->
+  -> static getDerivedStateFromProps(props, state)
+     // these call when we change the state derived from the props.
+  -> shouldComponentUpdate(nextProps, nextState)  
+     // these method call to check that if we try to change the state but its value is same as the previous state, then the component should re render or not.
+     // shouldComponentUpdate() this value returns true by default which means ur component will be rendered no matter if there is any update or not..
+     // we can override this method ans return false on a condition that if our component state or props have been changes then only our component should rendered again. otherwise no..
+  -> getSnapshotBeforeUpdate(prevProps, prevState)
+     // The third method which is called is the getSnapshotBeforeUpdate() in this method, you have access to the props and state before the update, meaning that even after the update, you can check what the values were before the update.
+  -> componentDidUpdate(prevProps, prevState, snapshot)
+     // These method if override run after every update.
+
+? Component UnMounting Phase -->
+  -> componentWillUnmount()
+     // the only method which is called just before the component is remove from the actual dom.
+
+
+       
+$ Now What in functional based components??
+  Well in that case we have a very effective hook i.e 
+
+# useEffect() Hook:
+  from the above theory the three main methods which are useFull are:
+  + componentDidMount() to perform task after the component is in actual dom.
+  + componentDidUpdate() to perform the task after every re-render of the component.
+  + componentWillUnmount() to perform the task before the component is removed from the the dom.
+
+  So to use these three methods in functional based components we have useEffect() hook which is the combination of all the three methods.
+
+? i.e useEffect() will called 3 times:
+  -> 1. FIrst when component mounts in the DOM..
+  -> 2. When the component is updated..
+  -> 3. when component will unmount from the DOM..
+
+  We can also setup condition on use Effect i.e we can control when to cal useEffect and when not.. using dependencies
+
+? Normal Syntax without the dependencies: 
+  (for working of componentDidMount() and componentDidUpdate())
+  > useEffect(()=>{
+  >     console.log(`Use Effect is called`)
+  > })
+
+? useEffect() with cleanup: 
+  (for working of componentWillUnmount()) 
+  -In a React class, you would typically set up a subscription in componentDidMount, and clean it up in componentWillUnmount. 
+  -So componentWillUnmount() method calls when component is going to unmount from the dom hence our useEffect will return a fucntion called cleanup function which calls when the component is going to unmount from the dom.
+  > useEffect(()=>{
+  >     console.log(`Use Effect is called`)
+  > return function cleanup()=>{
+  >   console.log("Bye i am going to unmount")    
+  > }
+  > })
+
+? When exactly does React clean up an effect? React performs the cleanup when the component unmounts. However, as we learned earlier, effects run for every render and not just once. This is why React also cleans up effects from the previous render before running the effects next time.  
+
+? useEffect() with Dependencies:
+  Using dependencies we can set restrictions on our useEffect hook that is when to run it and when not,
+  -dependencies is an empty Array [],
+  -In which the state our added on which u want to run the useEffect()
+  - Providing an empty array will run the useEffect() hook only once and it acts like a componentDidMount() method.
+  // whenever state name changes this useEffect() run otherwise not.
+  > useEffect(()=>{
+  >     console.log(`Use Effect is called`)
+  > },[name])
+  // only run on first render
+  > useEffect(()=>{
+  >     console.log(`Use Effect is called`)
+  > },[])
+  
