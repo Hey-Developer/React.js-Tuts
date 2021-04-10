@@ -1,0 +1,68 @@
+$ Hello EveryOne..
+
+In this we will learn about the useCallback hook,
+But before diving into it let's learn about Performance Optimization.
+
+# Project Structure:
+  We Have:
+  @ <App/> component which render <ParentComponent/>.
+  @ <ParentComponent/> have:
+    + States: age & salary
+    + functions: incrementAge & incrementSalary
+    + Child components: 
+      - <Title/>
+      - <Count text="Age" count={age}/>
+      - <Button handleClick={incrementAge}>incrementAge</Button>
+      - <Count text="Salary" count={salary}/>
+      - <Button handleClick={incrementSalary}>incrementSalary</Button>
+    So our ParentComponent render these 5 components:
+  @ <Title/> component is simply Displays a title
+  @ <Count/> component shows Data(Age and salary).   
+  @ <Button/> component changes Data(Age and salary).
+
+  So Basically When our Main component i.e <App/> renders. 
+  - These 5 Component Renders.
+    + Rendering Title Component
+    + Count Rendering Age component
+    + Button Rendering Increment Age  Button component
+    + Count Rendering Salary component
+    + Button Rendering Increment Salary  Button component
+
+? We Know that Our App renders Each Time Our State Changes:
+  and our states our Age & Salary.
+  So If We click on incrementAge button that will only change the Age state data,but
+  As the state changes our App re-renders and hence all 5 components will re-render.
+  X-X This Behavior decreases the performance of our Application, if our every component will re-render even if data is not change.
+  I.e here we only change Age data not the Salary Data.But then Also Count Component With the Salary Data re-renders.
+
+# To Avoid these Behavior We Can Use React.memo() it is HOC, which take care of re-rendering that is it will only allow the components to re-render if its state our props data change, so let's see applying it.
+Ex-> React.memo(Button)-React.memo(Count)-React.memo(Title)
+
+? Now What Happen If we click on incrementAge: according to the logic, our state Age is changed hence our <App/> component will re-render.
+  But this time when the flow will reach to render method.i.e 
+  -1: <Title>, now it is a HOC so react will check weather its state or props is changed, if not then return false and don't allow it to render.
+
+  -2: <Count text="Age" count={age}/>, here also as the state age data is changed there-force props will change so as result HOC will return True and allow the component to re-render.
+
+  -3: <Button handleClick={incrementAge}>incrementAge</Button>, here as our age data is changed there force incrementAge function is alter which means HOC will return True and allow the component to re-render.
+
+  -4: <Count text="Salary" count={salary}/>, there is not change in salary data hence these component did not re-render.
+
+  -5: <Button handleClick={incrementSalary}>incrementSalary</Button>, as here we pass function as props and when we click on incrementAge button these salary Data is not changed i.e there is no change in incrementSalary function, which means our function prop is same, so these component should not re-render, But if You Seen the log These button component re-render. ?? WHY?????
+
+# This is Crazy, why React.memo() is not working on Button Component.
+  Let me tell you why.
+  React.memo is doing its work properly.
+  When we click on incrementAge, the age state in the App component changes, as a result App component re-renders.
+  $ So when this App component re-renders, fucntion definition is same but its reference will change, and we know that function equality will check on reference basis, hence the function incrementAge and incrementSalary creates new References, and when these functions pass as props, React.memo() think the reference of the function is changed hence it is a new prop these allow the Button component to re-renders.
+
+? Then What is the Solution of this reference equality problem: solution is useCallback hook, these hook only used in case of callbacks props, i.e is if want that this callback function do not change after re-render, its reference will be same as before.
+
+# useCallback() is a hook that will return a memoized version of the callback function that only changes if one of the dependencies changed.
+  So what it's its simply store the function in cache and next time when the component re-render if its dependencies is not changed then this will return the cached version of the function otherwise , a new function will be returned.
+
+  For ex- in our case when we click on incrementAge then our salary data remains same hence if use useCallback with the incrementSalary callback then unless and until the salary data is not changed then the callback hook will return the cached version of the function.
+
+# after Applying callback hook now you can see only those component will re-render whose state or props is changed--> 😁😁.
+
+*** Must Read: https://kentcdodds.com/blog/usememo-and-usecallback
