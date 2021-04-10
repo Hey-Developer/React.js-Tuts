@@ -1,0 +1,61 @@
+$ Hello EveryOne..
+
+In this we will learn about the useMemo hook,
+
+
+# Project Structure:
+  We Have:
+  @ <App/> component which render <Counter/> component.
+  @ <Counter/> have:
+    + States: countOne & countTwo.
+    + functions: incrementCountOne & incrementCountTwo.
+    Inside Counter component we have two buttons which increase the counter value.
+    But we have two buttons one for counter-1 and one for counter-2.
+    Now when i click on button 1 the countOne state changes which forces re-render of <Counter/> component hence updates the UI. on first button because countOne value is changed.
+    countTwo button does not get affected because inside countTwo state is using which didn't change.
+
+    Ok So that's simple
+
+- Now let;s use a isEven function and check for the countOne value weather it is even or not and then display on the ui.    
+    > const isEven = ()=>{
+    >     return countOne %2 === 0;
+    > }
+now it the ui.
+    > {isEven() ? "Even" : "Odd"}
+
+- So now When i click on count one its value increase i.e state value change hence the component re-render so the function will be call again and check weather the current countOne value is even or odd, so in UI the result will be display according to calculation.
+
+- Here the work is not complex hence when the function is called it return the result within fraction of seconds therefore there is no noticeable delay in rendering the UI.
+
+- But when we perform High Complex tasks that takes lots of time such as fetching the list of 1000 users and then mapping them and sorting them. so when the UI is dependent on this function calls, the function will take time to execute hence there will be delay in rendering the UI.
+for ex: let's make our function little bit slow.
+    > const isEven = ()=>{
+    >     let i=0;
+    >     while (i<20000000) i++;
+    >     return countOne %2 === 0;
+    > }
+
+So when the flow comes at this line:
+    > {isEven() ? "Even" : "Odd"}
+    this function will call and take time to execute hence it will return its result little bit slow there force our UI will display with delay.
+
+? We set this isEven function to check the even or odd for the countOne value, But what if we click on incrementTwo that is we change the state value of countTwo, as a result state changes and also re-renders the component. So we can notice that there is a delay in display the UI.
+
+But Why we didn't change th countOne value so why isEven function is called.
+because we didn't set any restriction on our function to call on the particular value.
+Hence here the role of useMemo comes.
+
+# useMemo hook create a cached version of the function and will tell react to not to call this function on this particular value. and call this function on the specific value. that is we add a dependencies array in this function. just like useCallback hook.
+- Now if the dependencies is not changed useMemo will pass the cached version of the function to react and if the dependencies is changed then it will re compute the function and then call it.
+    > const isEven= useMemo(()=>{
+    >     let i = 0;
+    >     while(i < 2000000) i++;
+    >     return countOne % 2 ===0;
+    > },[countOne])
+
+useMemo is somewhat similar to useCallback hook then what is the difference?
+
+# useMemo vs useCallback: 
+  useCallback caches the provided function itself. 
+  &
+  useMemo invoke the provided function and caches its result.
