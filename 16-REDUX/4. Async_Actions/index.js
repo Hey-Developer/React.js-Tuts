@@ -118,7 +118,7 @@ these function inside it can perform the async call as it is not mandatory to be
 const fetchUsers = () => {
   return function (dispatch) {
     // here we will be start our fetch user request so we have to call FETCH_USERS_REQUEST action here
-    dispatch(fetchUsersRequest());
+    // dispatch(fetchUsersRequest());
     axios
       .get("https://jsonplaceholder.typicode.com/users")
       .then((response) => {
